@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 
-export const connectAsync = () => {
+export function connectAsync() {
     return new Promise((resolve, reject) => {
-
         // Connect options - prevent console warnings:
         const options = { useNewUrlParser: true, useUnifiedTopology: true };
 
@@ -16,4 +15,6 @@ export const connectAsync = () => {
         });
     });
 };
+
+
 
