@@ -1,4 +1,4 @@
-import React, {useState, SyntheticEvent} from 'react';
+import React, {useState, SyntheticEvent, useEffect} from 'react';
 import {
     MDBCard,
     MDBCardBody,
@@ -7,9 +7,13 @@ import {
     MDBValidation,
     MDBBtn,
     MDBIcon,
-    MDBValidationItem
+    MDBValidationItem, MDBSpinner
 } from "mdb-react-ui-kit";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
+import {login} from "../redux/features/authSlice";
+import {useAppDispatch, useAppSelector} from "../redux/hooks";
+import {useSelector} from "react-redux";
 
 const initialState = {
     email: "",
@@ -18,10 +22,20 @@ const initialState = {
 
 
 const Login = () => {
+    const dispatch = useAppDispatch();
+    const {loginInProgress, error} = useAppSelector((state) => ({...state.auth}));
     const [formValue, setFormValue] = useState(initialState);
     const {email, password} = formValue;
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        error && toast.error(error);
+    }, [error]);
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
+        if (email && password) {
+            dispatch(login({formValue, navigate, toast}))
+        }
     };
     const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setFormValue({...formValue, [e.target.name]: e.target.value});
@@ -60,12 +74,20 @@ const Login = () => {
                                 required
                             />
                         </MDBValidationItem>
+                        <div className="col-12">
+                            <MDBBtn style={{width: "100%"}} className="mt-2">
+                                {loginInProgress && (
+                                    <MDBSpinner
+                                        size="sm"
+                                        role="status"
+                                        tag="span"
+                                        className="me-2"
+                                    />
+                                )}
+                                Login
+                            </MDBBtn>
+                        </div>
                     </MDBValidation>
-                    <div className="col-12">
-                        <MDBBtn style={{width: "100%"}} className="mt-2">
-                            Login
-                        </MDBBtn>
-                    </div>
                 </MDBCardBody>
                 <MDBCardFooter>
                     <Link to="/register">
