@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cors from "cors";
 
 import userRouter from "./routes/userRouter";
+import tourRouter from "./routes/tourRouter";
 import connectAsync from "./dal/dal";
 
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({limit: "25mb", extended: true}));
 app.use(cors());
 
 app.use("/api/users", userRouter);
+app.use("/api/tours", tourRouter);
 
 const port = process.env.PORT || 5000;
 
