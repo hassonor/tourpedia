@@ -1,9 +1,10 @@
 import {createSlice} from "@reduxjs/toolkit";
 
 import {googleSignIn, login, register} from "../thunks/authThunk";
+import {TUserAuthStore} from "./types";
 
 
-const initialState = {
+const initialState: TUserAuthStore = {
     user: null,
     error: "",
     loading: false,
@@ -13,7 +14,16 @@ const initialState = {
 const authSlice = createSlice({
     name: 'authSlice',
     initialState,
-    reducers: {},
+    reducers: {
+        setUser: (state, action) => {
+            state.user = action.payload;
+        },
+        setLogout: (state, action) => {
+            localStorage.clear();
+            state.user = null;
+        }
+
+    },
     extraReducers: (builder) => {
         builder.addCase(login.pending, (state, _action) => {
             state.loginInProgress = true
@@ -21,6 +31,7 @@ const authSlice = createSlice({
         builder.addCase(login.fulfilled, (state, action) => {
             state.loginInProgress = false;
             localStorage.setItem("profile", JSON.stringify({...action.payload}));
+            state.error = ""
             state.user = action.payload
         })
         builder.addCase(login.rejected, (state, action: any) => {
@@ -53,5 +64,7 @@ const authSlice = createSlice({
         })
     }
 })
+
+export const {setUser, setLogout} = authSlice.actions;
 
 export default authSlice.reducer;
