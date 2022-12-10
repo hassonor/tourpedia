@@ -11,9 +11,10 @@ import {
 } from "mdb-react-ui-kit";
 import {Link, useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
-import {login} from "../redux/features/authSlice";
+
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
-import {useSelector} from "react-redux";
+import {login} from "../redux/features/thunks/authThunk";
+
 
 const initialState = {
     email: "",
@@ -41,12 +42,12 @@ const Login = () => {
         setFormValue({...formValue, [e.target.name]: e.target.value});
     };
     return (
-        <div style={{margin: "auto", padding: "15px", maxWidth: "450px", alignContent: "center", marginTop: "120px"}}>
+        <div style={{margin: "auto", padding: "15px", maxWidth: "450px", alignContent: "center", marginTop: "200px"}}>
             <MDBCard alignment="center">
-                <MDBIcon fas icon="user-circle" className="fa-2x"/>
+                <MDBIcon fas icon="user-circle" className="fa-2x" style={{padding: "15px"}}/>
                 <h5>Sign In</h5>
                 <MDBCardBody>
-                    <MDBValidation onSubmit={handleSubmit} isValidated className="row g-3">
+                    <MDBValidation onSubmit={handleSubmit} noValidate className="row g-3">
                         <MDBValidationItem className='col-md-12 pb-md-3' tooltip
                                            feedback='Please provide a valid email.'
                                            invalid>
