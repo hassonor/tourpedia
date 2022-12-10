@@ -1,6 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import * as api from "../../api";
-import {TLoginThunkPayload, TRegisterThunkPayload} from "./types";
+import {TLoginThunkPayload, TRegisterThunkPayload, TSignInWithGoogle} from "./types";
 
 
 export const login = createAsyncThunk("auth/login",
@@ -22,6 +22,20 @@ export const register = createAsyncThunk("auth/register",
             const {formValue, navigate, toast} = registerPayload;
             const response = await api.signUp(formValue);
             toast.success("Register Successfully");
+            navigate("/");
+            return response.data;
+        } catch (err: any) {
+            return rejectWithValue(err?.response?.data)
+        }
+    })
+
+
+export const googleSignIn = createAsyncThunk("auth/googleSignIn",
+    async (registerPayload: TSignInWithGoogle, {rejectWithValue}) => {
+        try {
+            const {result, navigate, toast} = registerPayload;
+            const response = await api.signInWithGoogle(result);
+            toast.success("Google Sign-in Successfully");
             navigate("/");
             return response.data;
         } catch (err: any) {

@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 
-import {login, register} from "../thunks/authThunk";
+import {googleSignIn, login, register} from "../thunks/authThunk";
 
 
 const initialState = {
@@ -36,6 +36,18 @@ const authSlice = createSlice({
             state.user = action.payload
         })
         builder.addCase(register.rejected, (state, action: any) => {
+            state.loginInProgress = false;
+            state.error = action.payload.message as string
+        })
+        builder.addCase(googleSignIn.pending, (state, _action) => {
+            state.loginInProgress = true
+        });
+        builder.addCase(googleSignIn.fulfilled, (state, action) => {
+            state.loginInProgress = false;
+            localStorage.setItem("profile", JSON.stringify({...action.payload}));
+            state.user = action.payload
+        })
+        builder.addCase(googleSignIn.rejected, (state, action: any) => {
             state.loginInProgress = false;
             state.error = action.payload.message as string
         })

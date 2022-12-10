@@ -13,7 +13,8 @@ import {Link, useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
-import {login} from "../redux/features/thunks/authThunk";
+import {googleSignIn, login} from "../redux/features/thunks/authThunk";
+import {GoogleLogin} from "@leecheuk/react-google-login";
 
 
 const initialState = {
@@ -41,6 +42,20 @@ const Login = () => {
     const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setFormValue({...formValue, [e.target.name]: e.target.value});
     };
+
+    const googleSuccess = (response: any) => {
+        const email = response?.profileObj?.email;
+        const name = response?.profileObj?.name;
+        const token = response?.tokeId;
+        const googleId = response?.googleId;
+        const result = {email, name, token, googleId}
+        dispatch(googleSignIn({result, navigate, toast}))
+    }
+
+    const googleFailure = (error: any) => {
+        toast.error(error);
+    }
+
     return (
         <div style={{margin: "auto", padding: "15px", maxWidth: "450px", alignContent: "center", marginTop: "200px"}}>
             <MDBCard alignment="center">
@@ -89,6 +104,18 @@ const Login = () => {
                             </MDBBtn>
                         </div>
                     </MDBValidation>
+                    <br/>
+                    <GoogleLogin clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}
+                                 render={(renderProps) => (
+                                     <MDBBtn style={{width: "100%"}} color="danger" onClick={(renderProps.onClick)}
+                                             disabled={renderProps.disabled}>
+                                         <MDBIcon className="me-2" fab icon="google"/> Sign In with Google
+                                     </MDBBtn>
+                                 )}
+                                 onSuccess={googleSuccess}
+                                 onFailure={googleFailure}
+                                 cookiePolicy="single_host_origin"
+                    />
                 </MDBCardBody>
                 <MDBCardFooter>
                     <Link to="/register">

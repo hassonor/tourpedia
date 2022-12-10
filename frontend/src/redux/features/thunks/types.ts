@@ -11,3 +11,9 @@ export type TRegisterThunkPayload = {
     navigate: NavigateFunction,
     toast: any
 }
+
+export type TSignInWithGoogle = {
+    result: any,
+    navigate: NavigateFunction,
+    toast: any
+}

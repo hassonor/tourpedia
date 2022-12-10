@@ -48,3 +48,23 @@ export const signIn = async (req, res) => {
         console.log(err);
     }
 };
+
+export const googleSignIn = async (req, res) => {
+    const {email, name, token, googleId} = req.body;
+    try {
+        const existUser = await UserModel.find({email});
+        if (existUser) {
+            const result = {_id: existUser._id.toString(), email, name};
+            return res.status(200).json({result, token});
+        }
+        const result = await UserModel.create({
+            email,
+            name,
+            googleId
+        });
+        res.status(201).json({result, token});
+    } catch (err) {
+        res.status(500).json({message: "Something went wrong"});
+        console.log(err);
+    }
+}
