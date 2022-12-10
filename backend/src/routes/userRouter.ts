@@ -8,6 +8,5 @@ router.post("/signup", signUp);
 router.post("/signin", signIn);
 router.post("/googleSignIn", googleSignIn)
 
-
 export default router;
 

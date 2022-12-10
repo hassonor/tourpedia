@@ -52,7 +52,7 @@ export const signIn = async (req, res) => {
 export const googleSignIn = async (req, res) => {
     const {email, name, token, googleId} = req.body;
     try {
-        const existUser = await UserModel.find({email});
+        const existUser: any = await UserModel.find({email});
         if (existUser) {
             const result = {_id: existUser._id.toString(), email, name};
             return res.status(200).json({result, token});

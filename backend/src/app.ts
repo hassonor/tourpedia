@@ -1,18 +1,19 @@
-import express from "express";
+import express, {Application} from 'express';
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
-import { connectAsync } from "./dal/dal.js";
-import userRouter from "./routes/userRouter.js";
+
+import userRouter from "./routes/userRouter";
+import connectAsync from "./dal/dal";
 
 
 dotenv.config();
-const app = express();
+const app: Application = express();
 
 app.use(morgan("dev"));
-app.use(express.json({ limit: "25mb" }));
-app.use(express.urlencoded({ limit: "25mb", extended: true }));
+app.use(express.json({limit: "25mb"}));
+app.use(express.urlencoded({limit: "25mb", extended: true}));
 app.use(cors());
 
 app.use("/api/users", userRouter);
@@ -25,9 +26,7 @@ app.get("/", (req, res) => {
 
 mongoose.set("strictQuery", true);
 
-connectAsync()
-    .then(db => console.log("We're connected to MongoDB."))
-    .catch(err => console.log(err));
+connectAsync();
 
 
 app.listen(port, () => {
